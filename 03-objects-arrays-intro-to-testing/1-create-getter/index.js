@@ -5,4 +5,15 @@
  */
 export function createGetter(path) {
 
+    function returnGetter(obj = {})
+    {
+        const arr = path.split('.')
+        let result = {...obj}
+        for(const key of arr){
+            result = result[key];
+            if (result === undefined) break;
+        }
+        return result
+    }
+    return returnGetter;
 }
