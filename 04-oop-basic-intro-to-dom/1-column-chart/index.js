@@ -1,15 +1,12 @@
 export default class ColumnChart {
   chartHeight = 50;
-  chartData = {
-    data:[],
-    label: '',
-    link: '',
-    value: 0,
-    formatHeading: data => data 
-  };
   
-  constructor(chartData) {
-    Object.assign(this.chartData,chartData);
+  constructor({ data = [], label = '', link ='', value = 0, formatHeading = data => data } = {}) {
+    this.data = data;
+    this.label = label;
+    this.link = link;
+    this.value = value;
+    this.formatHeading = formatHeading;
     this.render();
   }
 
@@ -17,14 +14,14 @@ export default class ColumnChart {
     return `
      <div class="column-chart" style="--chart-height: ${this.chartHeight}">
       <div class="column-chart__title">
-        ${this.chartData.label}
-        ${this.chartData.link ?
-          `<a href="${this.chartData.link}" class="column-chart__link">View all</a>`:``}
+        ${this.label}
+        ${this.link ?
+          `<a href="${this.link}" class="column-chart__link">View all</a>`:``}
       </div>
       <div class="column-chart__container">
-        <div data-element="header" class="column-chart__header">${this.chartData.formatHeading(this.chartData.value)}</div>
+        <div data-element="header" class="column-chart__header">${this.formatHeading(this.value)}</div>
         <div data-element="body" class="column-chart__chart">
-          ${this.renderColumns(this.chartData.data)}
+          ${this.renderColumns(this.data)}
         </div>
       </div>
       </div>
@@ -36,7 +33,7 @@ export default class ColumnChart {
     const element = document.createElement("div");
     element.innerHTML = this.getTemplate(); 
 
-    if(!this.chartData.data.length)
+    if(!this.data.length)
       element.querySelector('.column-chart').classList.add('column-chart_loading');
     this.element = element.firstElementChild;  
   }
