@@ -16,7 +16,7 @@ class Tooltip {
   onPointerOver = (event) =>{
     
 
-    console.log(this.element === event.target.closest('[data-tooltip]'))
+   
     this.targetElem = event.target.closest('[data-tooltip]')
 
     if(!this.targetElem) return;
@@ -24,14 +24,13 @@ class Tooltip {
     this.render();
     this.element.innerHTML = event.target.closest('[data-tooltip]').dataset.tooltip
     this.targetElem.addEventListener('pointermove',this.onPointerMove);
-    this.targetElem.addEventListener('pointerout',this.onPointerOut);
+    this.targetElem.addEventListener('pointerout',this.onPointerOut,{once:true});
     this.element.hidden = false;
   }
 
   onPointerOut = () =>{
 
     this.targetElem.removeEventListener('pointermove',this.onPointerMove);
-    this.targetElem.removeEventListener('pointerout',this.onPointerOut);
     this.targetElem = null;
     this.element.remove();
   }
@@ -54,8 +53,7 @@ class Tooltip {
   destroy(){
     
     Tooltip.#onlyInstance = null;
-    document.body.removeEventListener('pointerover',this.onPointerOver);
-
+    
     if(this.targetElem){
       this.targetElem.removeEventListener('pointermove',this.onPointerMove);
       this.targetElem.removeEventListener('pointerout',this.onPointerOut);

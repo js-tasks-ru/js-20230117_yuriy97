@@ -12,18 +12,20 @@ export default class SortableTable {
   }
 
   render(){
+
+    let arr = [...this.data]
+
+    if(this.sorted.id && this.sorted.order)
+        arr = this.arrSort(this.sorted.id, this.sorted.order)
+
     const element = document.createElement("div");
-    element.innerHTML = this.getTemplate();
+    element.innerHTML = this.getTemplate(arr);
     this.element = element.firstElementChild;
     this.subElements = this.getSubElements();
   }
  
-  getTemplate(){
+  getTemplate(arr){
 
-    let arr = [this.data]
-
-    if(this.sorted.id && this.sorted.order)
-        arr = this.arrSort(this.sorted.id, this.sorted.order)
       
     return ` <div data-element="productsContainer" class="products-list__container">
                 <div class="sortable-table">
