@@ -1,6 +1,6 @@
 export default class SortableList {
-
     constructor({items} = {}){
+
         this.items = items;
         this.render();
         this.addEventListeners();
@@ -27,8 +27,10 @@ export default class SortableList {
     }
 
     onPointerDown = (event) =>{
-        
+
        this.draggingElement = event.target.closest('.sortable-list__item')
+
+       if(this.draggingElement){
         
         if(event.target.closest('[data-delete-handle]'))
         {   
@@ -38,13 +40,16 @@ export default class SortableList {
         if(event.target.closest('[data-grab-handle]')){
             
             this.xCord = event.clientX;
+
+            this.shiftX = event.pageX - this.draggingElement.getBoundingClientRect().left
+            this.shiftY = event.pageY - this.draggingElement.getBoundingClientRect().top
+            
             event.preventDefault();
             this.dragElement();
         }
+    }
             
     }
-
-
 
     dragElement(){
 
@@ -69,27 +74,23 @@ export default class SortableList {
 
     onPointerMove = (event) => {
 
-       
-       this.draggingElement.style.left = event.clientX + 5 +'px';
-       this.draggingElement.style.top = event.clientY + 5 + 'px';
-       
-       let elem = document.elementFromPoint(this.xCord,event.clientY)
+        this.draggingElement.style.left = event.clientX  + 5 +'px';
+        this.draggingElement.style.top = event.clientY  + 5 + 'px';
 
-       if(elem){
+        if(event.pageY > 0 && event.pageY< document.documentElement.clientHeight)
             this.current = document.elementFromPoint(this.xCord,event.clientY).closest('li')
-        }
 
-       this.draggingElement.style.left = event.clientX  +'px';
-       this.draggingElement.style.top = event.clientY  + 'px';
+        this.draggingElement.style.left = event.clientX - this.shiftX +'px';
+        this.draggingElement.style.top = event.clientY - this.shiftY + 'px';
 
         if(this.current){
             
             const currentRect = this.current.getBoundingClientRect()
+
             if(event.clientY > currentRect.top - currentRect.height/2)
                 this.current.after(this.placeholder)
             if(event.clientY < currentRect.top + currentRect.height/2)
                 this.current.before(this.placeholder)
-
         }
     }
 
